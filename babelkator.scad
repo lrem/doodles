@@ -1,6 +1,6 @@
 $fn=180;  // I see no reason to have poorly done arcs in here.
 
-module blowthrough (x=0, y=0, h=1, r=10, w=3, fh=0.5, fd=0.5, fans=30) {
+module blowthrough (x=0, y=0, h=1, r=10, w=3, fh=0.5, fd=0.5, fans=40) {
     translate([x, y]) {
         difference() {
             cylinder(h, r, r);
@@ -21,7 +21,7 @@ module head(r=10, w=3) {
     }
 }
 
-module handle(l=80, r=4, offs=20, fh=0.5) {
+module handle(l=140, r=4, offs=20, fh=1.5) {
     rotate([90, 0, 0]) {
         translate([0, r-fh, offs]) {
             cylinder(l, r, r);
@@ -43,4 +43,4 @@ module oblique_cone(h, r, x, y) {
 }
 
 head();
-handle();
+handle(r=3);
