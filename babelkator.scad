@@ -1,23 +1,20 @@
 $fn=180;  // I see no reason to have poorly done arcs in here.
 
+module head(r=10, w=3) {
+    blowthrough(r=r, w=w);
+    for(i = [0 : 6]) {
+        rotate(i * 60) blowthrough(2*r-w, r=r, w=w);
+    }
+}
+
 module blowthrough (x=0, y=0, h=1, r=10, w=3, fh=0.5, fd=0.5, fans=40) {
     translate([x, y]) {
-        difference() {
-            cylinder(h, r, r);
-            cylinder(3*h, r-w, r-w, true);
-        }
+        cylinder_with_a_hole(h, r, r-w);
         for(i = [0 : fans]) {
             rotate(i * 360/fans) 
                 translate([r-1-w, -0.5*fd, -fh]) 
                     cube([w, fd, h+2*fh], false);
         }
-    }
-}
-
-module head(r=10, w=3) {
-    blowthrough(r=r, w=w);
-    for(i = [0 : 6]) {
-        rotate(i * 60) blowthrough(2*r-w, r=r, w=w);
     }
 }
 
@@ -28,6 +25,13 @@ module handle(l=140, r=4, offs=20, fh=1.5) {
             translate([0, 0, l]) sphere(r);
             oblique_cone(-offs/2, r, 0, -r);
         }
+    }
+}
+
+module cylinder_with_a_hole(h, ro, ri) {
+    difference() {
+        cylinder(h, ro, ro);
+        cylinder(3*h, ri, ri, true);
     }
 }
 
