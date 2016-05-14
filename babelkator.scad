@@ -1,29 +1,32 @@
 $fn=180;  // I see no reason to have poorly done arcs in here.
 
 module head(r=10, w=3) {
-    blowthrough(r=r, w=w);
+    blowthrough(hole_radius=r-w, cylinder_width=w);
     for(i = [0 : 6]) {
-        rotate(i * 60) blowthrough(2*r-w, r=r, w=w);
+        rotate(i * 60) blowthrough(2*r-w, hole_radius=r-w, cylinder_width=w);
     }
 }
 
-module blowthrough (x=0, y=0, h=1, r=10, w=3, fh=0.5, fd=0.5, fans=40) {
+module blowthrough (x=0, y=0, inner_height=1, hole_radius=7, cylinder_width=3,
+                    fan_height=0.5, fan_width=0.5, fan_indent=1, fans=40) {
     translate([x, y]) {
-        cylinder_with_a_hole(h, r, r-w);
+        cylinder_with_a_hole(inner_height, hole_radius+cylinder_width,
+                hole_radius);
         for(i = [0 : fans]) {
             rotate(i * 360/fans) 
-                translate([r-1-w, -0.5*fd, -fh]) 
-                    cube([w, fd, h+2*fh], false);
+                translate([hole_radius-fan_indent, -0.5*fan_width, -fan_height]) 
+                    cube([cylinder_width, fan_width, inner_height+2*fan_height],
+                            false);
         }
     }
 }
 
-module handle(l=140, r=4, offs=20, fh=1.5) {
+module handle(length=140, radius=3, offs=20, cone_height=10, fan_height=1.5) {
     rotate([90, 0, 0]) {
-        translate([0, r-fh, offs]) {
-            cylinder(l, r, r);
-            translate([0, 0, l]) sphere(r);
-            oblique_cone(-offs/2, r, 0, -r);
+        translate([0, radius-fan_height, offs]) {
+            cylinder(length, radius, radius);
+            translate([0, 0, length]) sphere(radius);
+            oblique_cone(-cone_height, radius, 0, -radius+fan_height);
         }
     }
 }
@@ -47,4 +50,4 @@ module oblique_cone(h, r, x, y) {
 }
 
 head();
-handle(r=3);
+handle();
