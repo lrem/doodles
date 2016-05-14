@@ -18,6 +18,10 @@ module blowthrough (x=0, y=0, inner_height=1, hole_radius=7, cylinder_width=3,
                     cube([cylinder_width, fan_width, inner_height+2*fan_height],
                             false);
         }
+        adhesion_ring_outer_radius = hole_radius+cylinder_width-fan_indent;
+        translate([0, 0, -fan_height])
+            cylinder_with_a_hole(fan_width, adhesion_ring_outer_radius,
+                    adhesion_ring_outer_radius-fan_width);
     }
 }
 
