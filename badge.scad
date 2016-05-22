@@ -2,7 +2,7 @@ badge_dimensions = [85, 45, 2.5];
 $fn = 42; // Smoothness of corner rounding, compute-intensive.
 min_printable = 0.4; // If we go below nozzle diameter it may go ugly.
 hole_diameter = 3;
-top = hole_diameter + 2;
+top = hole_diameter + 2; // 2mm to withstand pulling the badge down.
 thickness = 0.5;
 
 module block() {
