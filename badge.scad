@@ -1,9 +1,9 @@
-badge_dimensions = [85, 45, 2.5];
+badge_dimensions = [85, 55, 3.14];
 $fn = 42; // Smoothness of corner rounding, compute-intensive.
 min_printable = 0.4; // If we go below nozzle diameter it may go ugly.
-hole_diameter = 3;
+hole_diameter = 4;
 top = hole_diameter + 2; // 2mm to withstand pulling the badge down.
-thickness = 0.5;
+thickness = 1;
 
 module block() {
     minkowski() {
@@ -36,7 +36,8 @@ difference() {
 }
 
 // Cap - to not scrub fluff from the pocket.
-translate([2*top, 0, -thickness]) // Separate from the main part, align to plate.
+translate([2*top, 0, -thickness * 1.15]) // Separate from the main part, align to plate.
+scale([1, 0.95, 0.9]) // Make it fit despite printing fuzziness.
 difference() {
     intersection() {
         block();
