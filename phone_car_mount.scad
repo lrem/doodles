@@ -40,9 +40,23 @@ module vertical(height, thickness, interlock=3*thickness, margin=thickness/2) {
 
 module slide_in(phone_dims, thickness, border=5) {
   difference() {
-    minkowski() {
-      cube(phone_dims);
-      sphere(thickness);
+    union() {
+      // Rounded wall around the phone.
+      minkowski() {
+        cube(phone_dims);
+        sphere(thickness);
+      }
+      // Flatten the back of the wall.
+      translate([-thickness, 0, 0]) {
+        intersection() {
+          translate([0, -thickness, -thickness]) 
+            cube([thickness, 1000*thickness, 1000*thickness]);
+          minkowski() {
+            cube(phone_dims);
+            sphere(thickness);
+          }
+        }
+      }
     }
     // to slide in
     scale([1, 1, 2])
