@@ -1,9 +1,9 @@
-badge_dimensions = [85, 55, 3.14];
+badge_dimensions = [85 + 2, 55, 3.14]; // Extra length for easier fit.
 $fn = 42; // Smoothness of corner rounding, compute-intensive.
 min_printable = 0.4; // If we go below nozzle diameter it may go ugly.
 hole_diameter = 4;
 top = hole_diameter + 2; // 2mm to withstand pulling the badge down.
-thickness = 1;
+thickness = 1.2; // 1.2mm is the minimum reported to be durable in PLA.
 
 module block() {
     minkowski() {
