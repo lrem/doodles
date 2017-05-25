@@ -70,18 +70,32 @@ module slide_in(phone_dims, thickness, border=5) {
 
 
 module holder(phone_dims, recess=50, height=30, thickness=3) {
-  slide_in(phone_dims, thickness);
+  if(main) {
+    slide_in(phone_dims, thickness);
+  }
   rotate([180, 0, 0])
     translate([-thickness, thickness/2, -phone_dims[2]]) {
-      translate([2*thickness, 0, 0]) // Just to show better.
-        top(recess, height, thickness);
-      vertical(height, thickness);
+      if(tops) {
+        translate([2*thickness, 0, 0]) // Just to show better.
+          top(recess, height, thickness);
+      }
+      if(main) {
+        vertical(height, thickness);
+      }
     }
   rotate([180, 0, 0])
     translate([-thickness, -(phone_dims[1] + thickness/2), -phone_dims[2]]) {
-      top(recess, height, thickness);
-      vertical(height, thickness);
+      if(tops) {
+        top(recess, height, thickness);
+      }
+      if(main) {
+        vertical(height, thickness);
+      }
     }
 }
 
 holder([10, 140, 80]);
+
+// For printing, export one model with only main part and one only with the tops.
+main = true;
+tops = true;
