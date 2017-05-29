@@ -1,3 +1,5 @@
+// This thing grew organically and I have misplaced a minus sign somewhere early on...
+
 module top(recess, height, thickness, interlock = 3*thickness, hole_diameter=8) {
   ro = hole_diameter / 2 + thickness;
   ri = hole_diameter / 2;
@@ -23,7 +25,7 @@ module top(recess, height, thickness, interlock = 3*thickness, hole_diameter=8) 
 }
 
 module vertical(height, thickness, interlock=3*thickness, margin=thickness/2) {
-  translate([0, 0, -height+thickness]) {
+  translate([0, 0, -height]) {
     translate([0, -thickness/2, thickness]) {
       cube([thickness, thickness, height]);
     }
@@ -34,6 +36,34 @@ module vertical(height, thickness, interlock=3*thickness, margin=thickness/2) {
           cube([3*thickness, thickness + margin, interlock + margin]);
         }
       }
+    }
+  }
+  // Difference to cut off the small diagonal corner that sticked out.
+  difference(){
+    rotate([45, 0, 0])
+      cube([thickness, thickness, height*sqrt(2)]);
+    // Translate and thicked to not have coplanar faces.
+    translate([-thickness, 0, 0]) {
+      cube([3*thickness, thickness, thickness]);
+    }
+  }
+  translate([0, 0, -height+thickness]) {
+    rotate([45, 0, 0])
+      cube([thickness, thickness, height*sqrt(2)]);
+  }
+}
+
+module hanger(phone_dims, width, height, thickness) {
+  translate([-thickness, 0, -phone_dims[2]]) {
+    translate([0, (width-phone_dims[1])/2, 0]) {
+        vertical(height, thickness);
+    }
+    translate([0, -(width+phone_dims[1])/2, 0]) {
+        mirror([0, 1, 0])
+          vertical(height, thickness);
+    }
+    translate([0, -(width+phone_dims[1])/2, 0]) {
+      cube([thickness, width, thickness]);
     }
   }
 }
@@ -69,32 +99,29 @@ module slide_in(phone_dims, thickness, border=5) {
 }
 
 
-module holder(phone_dims, recess=50, height=30, thickness=3) {
+module holder(phone_dims, width, recess=50, height=30, thickness=3) {
   if(main) {
     slide_in(phone_dims, thickness);
   }
-  rotate([180, 0, 0])
-    translate([-thickness, thickness/2, -phone_dims[2]]) {
-      if(tops) {
-        translate([2*thickness, 0, 0]) // Just to show better.
+  rotate([180, 0, 0]) {
+    color("green")
+    if(main) {
+      hanger(phone_dims, width, height, thickness);
+    }
+    color("red")
+    if(tops) {
+      translate([-thickness, -(width+phone_dims[1])/2, -phone_dims[2]]) {
+          translate([2*thickness, 0, 0]) // Just to show better.
+            top(recess, height, thickness);
+        }
+      translate([-thickness, (width-phone_dims[1])/2, -phone_dims[2]]) {
           top(recess, height, thickness);
       }
-      if(main) {
-        vertical(height, thickness);
-      }
     }
-  rotate([180, 0, 0])
-    translate([-thickness, -(phone_dims[1] + thickness/2), -phone_dims[2]]) {
-      if(tops) {
-        top(recess, height, thickness);
-      }
-      if(main) {
-        vertical(height, thickness);
-      }
-    }
+  }
 }
 
-holder([10, 140, 80]);
+holder([10, 140, 80], 200);
 
 // For printing, export one model with only main part and one only with the tops.
 main = true;
