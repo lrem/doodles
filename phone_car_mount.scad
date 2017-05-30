@@ -114,10 +114,12 @@ module holder(phone_dims, width, recess=50, height=30, thickness=3) {
     }
     color("red")
     if(tops) {
-      translate([-thickness, -(width+phone_dims[1])/2, -phone_dims[2]]) {
-          translate([2*thickness, 0, 0]) // Just to show better.
-            top(recess, height, thickness);
-        }
+      if(main) { // Only show both tops for display. Print two copies.
+        translate([-thickness, -(width+phone_dims[1])/2, -phone_dims[2]]) {
+            translate([2*thickness, 0, 0]) // Just to show better.
+              top(recess, height, thickness);
+          }
+      }
       translate([-thickness, (width-phone_dims[1])/2, -phone_dims[2]]) {
           top(recess, height, thickness);
       }
