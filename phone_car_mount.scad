@@ -1,6 +1,8 @@
 // This thing grew organically and I have misplaced a minus sign somewhere early on...
+// For printing, configure at the very bottom.
+// Note this should be exported as 2 STL models.
 
-module top(recess, height, thickness, interlock = 3*thickness, hole_diameter=8) {
+module top(recess, height, thickness, interlock = 3*thickness, hole_diameter=12) {
   ro = hole_diameter / 2 + thickness;
   ri = hole_diameter / 2;
   translate([-ro - recess, 0, -height]){
@@ -24,7 +26,7 @@ module top(recess, height, thickness, interlock = 3*thickness, hole_diameter=8) 
   }
 }
 
-module vertical(height, thickness, interlock=3*thickness, margin=thickness/2) {
+module vertical(phone_dims, height, thickness, interlock=3*thickness, margin=thickness/2) {
   translate([0, 0, -height]) {
     translate([0, -thickness/2, thickness]) {
       cube([thickness, thickness, height]);
@@ -38,29 +40,31 @@ module vertical(height, thickness, interlock=3*thickness, margin=thickness/2) {
       }
     }
   }
-  // Difference to cut off the small diagonal corner that sticked out.
-  difference(){
-    rotate([45, 0, 0])
-      cube([thickness, thickness, height*sqrt(2)]);
-    // Translate and thicked to not have coplanar faces.
-    translate([-thickness, 0, 0]) {
-      cube([3*thickness, thickness, thickness]);
+  if(phone_dims[1] > width + height/2) {
+    // Difference to cut off the small diagonal corner that sticked out.
+    difference(){
+      rotate([45, 0, 0])
+        cube([thickness, thickness, height*sqrt(2)]);
+      // Translate and thicked to not have coplanar faces.
+      translate([-thickness, 0, 0]) {
+        cube([3*thickness, thickness, thickness]);
+      }
     }
-  }
-  translate([0, 0, -height+thickness]) {
-    rotate([45, 0, 0])
-      cube([thickness, thickness, height*sqrt(2)]);
+    translate([0, 0, -height+thickness]) {
+      rotate([45, 0, 0])
+        cube([thickness, thickness, height*sqrt(2)]);
+    }
   }
 }
 
 module hanger(phone_dims, width, height, thickness) {
   translate([-thickness, 0, -phone_dims[2]]) {
     translate([0, (width-phone_dims[1])/2, 0]) {
-        vertical(height, thickness);
+        vertical(phone_dims, height, thickness);
     }
     translate([0, -(width+phone_dims[1])/2, 0]) {
         mirror([0, 1, 0])
-          vertical(height, thickness);
+          vertical(phone_dims, height, thickness);
     }
     translate([0, -(width+phone_dims[1])/2, 0]) {
       cube([thickness, width, thickness]);
@@ -121,7 +125,12 @@ module holder(phone_dims, width, recess=50, height=30, thickness=3) {
   }
 }
 
-holder([10, 140, 80], 200);
+// I like to have a looser fit around my phone, thus round up and then add another mm.
+
+// Toyota Avensis.
+holder([9, 161, 79], 150, 60); // Nexus 6p.
+//holder([9, 148, 74], 150, 60); // Nexus 5x.
+//holder([11, 128, 64], 150, 60); // iPhone SE in a case.
 
 // For printing, export one model with only main part and one only with the tops.
 main = true;
