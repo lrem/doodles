@@ -26,7 +26,7 @@ module top(recess, height, thickness, interlock = 3*thickness, hole_diameter=12)
   }
 }
 
-module vertical(phone_dims, height, thickness, interlock=3*thickness, margin=thickness/2) {
+module vertical(phone_dims, width, height, thickness, interlock=3*thickness, margin=thickness/2) {
   translate([0, 0, -height]) {
     translate([0, -thickness/2, thickness]) {
       cube([thickness, thickness, height]);
@@ -40,7 +40,7 @@ module vertical(phone_dims, height, thickness, interlock=3*thickness, margin=thi
       }
     }
   }
-  if(phone_dims[1] > width + height/2) {
+  if(phone_dims[1]  + height < width) {
     // Difference to cut off the small diagonal corner that sticked out.
     difference(){
       rotate([45, 0, 0])
@@ -50,6 +50,8 @@ module vertical(phone_dims, height, thickness, interlock=3*thickness, margin=thi
         cube([3*thickness, thickness, thickness]);
       }
     }
+  }
+  if(phone_dims[1] + thickness < width) {
     translate([0, 0, -height+thickness]) {
       rotate([45, 0, 0])
         cube([thickness, thickness, height*sqrt(2)]);
@@ -60,11 +62,11 @@ module vertical(phone_dims, height, thickness, interlock=3*thickness, margin=thi
 module hanger(phone_dims, width, height, thickness) {
   translate([-thickness, 0, -phone_dims[2]]) {
     translate([0, (width-phone_dims[1])/2, 0]) {
-        vertical(phone_dims, height, thickness);
+        vertical(phone_dims, width, height, thickness);
     }
     translate([0, -(width+phone_dims[1])/2, 0]) {
         mirror([0, 1, 0])
-          vertical(phone_dims, height, thickness);
+          vertical(phone_dims, width, height, thickness);
     }
     translate([0, -(width+phone_dims[1])/2, 0]) {
       cube([thickness, width, thickness]);
@@ -72,7 +74,7 @@ module hanger(phone_dims, width, height, thickness) {
   }
 }
 
-module slide_in(phone_dims, thickness, border=5) {
+module slide_in(phone_dims, thickness, border=6) {
   difference() {
     union() {
       // Rounded wall around the phone.
@@ -103,7 +105,7 @@ module slide_in(phone_dims, thickness, border=5) {
 }
 
 
-module holder(phone_dims, width, recess=50, height=30, thickness=3) {
+module holder(phone_dims, width, recess=50, height=30, thickness=4) {
   if(main) {
     slide_in(phone_dims, thickness);
   }
@@ -127,12 +129,14 @@ module holder(phone_dims, width, recess=50, height=30, thickness=3) {
   }
 }
 
-// I like to have a looser fit around my phone, thus round up and then add another mm.
+// I like to have a looser fit around my phone, thus round up and then add another two mm.
+
+$fn = 64;
 
 // Toyota Avensis.
-holder([9, 161, 79], 150, 60); // Nexus 6p.
-//holder([9, 148, 74], 150, 60); // Nexus 5x.
-//holder([11, 128, 64], 150, 60); // iPhone SE in a case.
+holder([10, 162, 80], 150, 60); // Nexus 6p.
+//holder([10, 149, 75], 150, 60); // Nexus 5x.
+//holder([12, 129, 65], 150, 60); // iPhone SE in a case.
 
 // For printing, export one model with only main part and one only with the tops.
 main = true;
