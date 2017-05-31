@@ -105,7 +105,7 @@ module slide_in(phone_dims, thickness, border=6) {
 }
 
 
-module holder(phone_dims, width, recess=50, height=30, thickness=4) {
+module holder(phone_dims, width, recess=40, height=30, thickness=4) {
   if(main) {
     slide_in(phone_dims, thickness);
   }
